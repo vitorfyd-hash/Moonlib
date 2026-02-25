@@ -1,15 +1,21 @@
-# 🌙 Moonlib - Reivindicada por Moon Cat
+# 🌙 MoonLib - Official Repository
 
-> **Status:** Versão Beta Privada [cite: 2026-02-23]
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Beta-purple?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Owner-MoonCat-blueviolet?style=for-the-badge">
+</p>
 
-Esta biblioteca, anteriormente conhecida como **Redz**, foi oficialmente reivindicada e agora é propriedade de **Moon Cat**. [cite: 2026-02-25]
+---
 
-## 📌 Histórico
-* **Propriedade Original:** Redz (Reivindicado) [cite: 2026-02-25]
-* **Novo Mantenedor:** Moon Cat [cite: 2026-02-25]
-* **Plataforma:** Otimizado para Moto G04s. [cite: 2026-02-25]
+## 🚀 Sobre o Projeto
+A **MoonLib** é a biblioteca definitiva de interface para Roblox, agora reivindicada e mantida por **Moon Cat**. Este projeto é uma evolução focada em performance, estilo e exclusividade.
 
-## 🚀 Loadstring Oficial
+> "MoonCat novo dono do redz ou como chamado novo Moonlib"
+
+---
+
+## 📥 Como Usar
+Para carregar a biblioteca no seu executor (Delta, Fluxus, etc.), utilize o comando oficial abaixo:
+
 ```lua
-loadstring(game:HttpGet("[https://raw.githubusercontent.com/vitorfyd-hash/Moonlib/main/moonlib.lua](https://raw.githubusercontent.com/vitorfyd-hash/Moonlib/main/moonlib.lua)"))()
-
+loadstring(game:HttpGet("[https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/moonlib.lua](https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/moonlib.lua)"))()
