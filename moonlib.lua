@@ -1,61 +1,68 @@
--- Moon Cat Hub (Propriedade: MoonCat / Redz)
--- versão beta proibido divulgar sem autorização
+-- Moon Cat Hub | v1.0 Premium
+-- Chave: MOON
+-- quer divulgar divulgue mísera kk
 
-local RedzLib = {}
+-- [[ FUNÇÃO PRINCIPAL DO HUB ]]
+local function StartMoonHub()
+    -- Carregando a Interface (Visual Redz)
+    local MoonLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/MoonLib/main/redz_ui.lua"))()
+    
+    local Window = MoonLib:CreateWindow({
+        Title = "Moon Cat Hub",
+        SubTitle = "quer divulgar divulgue mísera kk",
+        Color = Color3.fromRGB(255, 0, 0) -- Vermelho MoonCat
+    })
 
-function RedzLib:CreateWindow(Config)
-    local Title = Config.Title or "Redz Hub"
-    local Subtitle = Config.SubTitle or "versão beta proibido divulgar sem autorização"
-    
-    -- [ UI PRINCIPAL ]
-    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-    local Main = Instance.new("Frame", ScreenGui) -- O retângulo principal
-    Main.Size = UDim2.new(0, 550, 0, 350)
-    Main.Position = UDim2.new(0.5, -275, 0.5, -175)
-    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- Fundo Dark Redz
-    
-    -- [ CORNERS - O arredondado clássico ]
-    local UICorner = Instance.new("UICorner", Main)
-    UICorner.CornerRadius = UDim.new(0, 8)
-
-    -- [ SIDEBAR - Onde ficam os ícones ]
-    local SideBar = Instance.new("Frame", Main)
-    SideBar.Size = UDim2.new(0, 150, 1, 0)
-    SideBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    
-    local SideCorner = Instance.new("UICorner", SideBar)
-    
-    -- [ TÍTULO E SUBTÍTULO ]
-    local TxtTitle = Instance.new("TextLabel", SideBar)
-    TxtTitle.Text = Title
-    TxtTitle.Position = UDim2.new(0, 15, 0, 20)
-    TxtTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TxtTitle.TextXAlignment = Enum.TextXAlignment.Left
-    TxtTitle.Font = Enum.Font.GothamBold
-    
-    local TxtSub = Instance.new("TextLabel", SideBar)
-    TxtSub.Text = Subtitle
-    TxtSub.Size = UDim2.new(0, 120, 0, 20)
-    TxtSub.Position = UDim2.new(0, 15, 0, 35)
-    TxtSub.TextColor3 = Color3.fromRGB(150, 150, 150)
-    TxtSub.TextSize = 10
-    TxtSub.TextWrapped = true
-    TxtSub.BackgroundTransparency = 1
-
-    -- [ CONTAINER DE ABAS ]
-    local TabContainer = Instance.new("ScrollingFrame", SideBar)
-    TabContainer.Size = UDim2.new(1, 0, 1, -70)
-    TabContainer.Position = UDim2.new(0, 0, 0, 70)
-    TabContainer.BackgroundTransparency = 1
-    
-    return {
-        CreateTab = function(self, name)
-            -- Lógica de criação de botões idênticos aos da Redz
-            local TabBtn = Instance.new("TextButton", TabContainer)
-            TabBtn.Size = UDim2.new(1, -20, 0, 30)
-            -- ... (Aqui entra o efeito de hover e o clique)
+    -- [ ABA DE FARM - MOTOR HOHO ]
+    local FarmTab = Window:CreateTab("Auto Farm")
+    FarmTab:CreateToggle({
+        Name = "Auto Level (HoHo Engine)",
+        Callback = function(v)
+            _G.AutoFarm = v
+            -- O código de farm do HoHo entra aqui
+            if v then print("Farm Iniciado!") end
         end
-    }
+    })
+
+    -- [ ABA DE EVENTOS - TEMPERO ZEN ]
+    local EventTab = Window:CreateTab("Sea Events")
+    EventTab:CreateToggle({
+        Name = "Auto Kitsune/Leviathan (Zen)",
+        Callback = function(v)
+            _G.ZenEvents = v
+            -- O segredo do Zen Hub entra aqui
+            if v then print("Buscando Eventos de Mar...") end
+        end
+    })
+
+    -- [ ABA DE COMBATE - AIM COLOR ]
+    local CombatTab = Window:CreateTab("Combate")
+    CombatTab:CreateButton({
+        Name = "Ativar Aim Color (Blood Strike)",
+        Callback = function()
+            -- Aqui vai a sua lógica de Aim por Cor
+            print("Aim Color Ativado!")
+        end
+    })
 end
 
-return RedzLib
+-- [[ SISTEMA DE KEY ESTILO HOHO (ANTI-LULA/TAXA) ]]
+local function ShowKeySystem()
+    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    local Main = Instance.new("Frame", ScreenGui)
+    Main.Size = UDim2.new(0, 320, 0, 180)
+    Main.Position = UDim2.new(0.5, -160, 0.5, -90)
+    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    Instance.new("UICorner", Main)
+
+    local Title = Instance.new("TextLabel", Main)
+    Title.Text = "MOON CAT HUB - KEY SYSTEM"
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamBold
+
+    local Input = Instance.new("TextBox", Main)
+    Input.PlaceholderText = "Digite a Key (Chave: MOON)"
+    Input
+    
