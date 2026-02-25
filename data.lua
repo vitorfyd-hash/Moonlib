@@ -1,64 +1,65 @@
--- Engine de Movimentação e Ataque Pro
-local MoonEngine = {
-    Speed = 325,
-    Distance = 10,
-    Height = 12
+-- Moon Cat Hub (Redz)
+-- versão beta proibido divulgar sem autorização
+
+local MoonLibData = {
+    -- ==========================================
+    -- MODO RUSH: SEA 1 e SEA 2
+    -- Vai direto para a última ilha de cada mar.
+    -- ==========================================
+    ["RushMode"] = {
+        [1] = { -- Sea 1 (Fountain City)
+            MobName = "Galley Captain",
+            QuestName = "GalleyQuest",
+            QuestNum = 2, -- ID da quest no CommF_
+            QuestGiver = CFrame.new(5259, 38, 4050),
+            MobCFrame = CFrame.new(5644, 38, 4022)
+        },
+        [2] = { -- Sea 2 (Forgotten Island)
+            MobName = "Water Fighter",
+            QuestName = "ForgottenQuest",
+            QuestNum = 1,
+            QuestGiver = CFrame.new(-3054, 237, -10148),
+            MobCFrame = CFrame.new(-3334, 240, -10543)
+        }
+    },
+
+    -- ==========================================
+    -- MODO EXATO: SEA 3 (Level 1500 ao 2800)
+    -- ==========================================
+    ["Sea3_Progressive"] = {
+        {
+            Min = 1500,
+            Max = 1524,
+            MobName = "Pirate Millionaire",
+            QuestName = "PirateMillionaireQuest",
+            QuestNum = 1,
+            QuestGiver = CFrame.new(-288, 43, 5580),
+            MobCFrame = CFrame.new(-380, 71, 5526)
+        },
+        {
+            Min = 1525,
+            Max = 1574,
+            MobName = "Pistol Billionaire",
+            QuestName = "PirateMillionaireQuest",
+            QuestNum = 2,
+            QuestGiver = CFrame.new(-288, 43, 5580),
+            MobCFrame = CFrame.new(-466, 73, 5382)
+        },
+        -- Você pode ir adicionando as outras ilhas aqui copiando e colando este bloco...
+        
+        {
+            -- Exemplo do limite máximo (Fevereiro 2026)
+            Min = 2775,
+            Max = 2800,
+            MobName = "Emperor Guard", -- Exemplo de Mob final
+            QuestName = "EmperorQuest",
+            QuestNum = 1,
+            QuestGiver = CFrame.new(1230, 50, -4500), 
+            MobCFrame = CFrame.new(1350, 50, -4650)
+        }
+    }
 }
 
--- Bypass de Teleporte (Anti-Kick)
-function MoonEngine:Tween(targetCFrame)
-    local char = game.Players.LocalPlayer.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-    
-    local root = char.HumanoidRootPart
-    local dist = (root.Position - targetCFrame.p).Magnitude
-    local tween = game:GetService("TweenService"):Create(root, 
-        TweenInfo.new(dist/self.Speed, Enum.EasingStyle.Linear), 
-        {CFrame = targetCFrame}
-    )
-    
-    -- Se o char cair no void ou for teleportado pra longe, cancela e reinicia
-    tween:Play()
-    return tween
-end
-
--- Fast Attack Magnético (Dano em Área)
-function MoonEngine:Attack(mob)
-    local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
-    if not tool then
-        -- Auto Equip
-        local backpack = game.Players.LocalPlayer.Backpack
-        local weapon = backpack:FindFirstChild("Combat") or backpack:FindFirstChildOfClass("Tool")
-        if weapon then weapon.Parent = game.Players.LocalPlayer.Character end
-    end
-    
-    -- Registra o hit sem animação (Mais rápido que o clique)
-    local args = { [1] = mob.Humanoid }
-    game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("weaponChange",tostring(tool))
-    game:GetService("ReplicatedStorage").Remotes.Validator:FireServer(math.huge) -- Bypass de verificação
-end
-
--- Loop de Farm "Imortal"
-function MoonEngine:StartFarm(mobName, npcPos)
-    _G.MoonFarm = true
-    spawn(function()
-        while _G.MoonFarm do
-            task.wait()
-            pcall(function()
-                local mob = workspace.Enemies:FindFirstChild(mobName) or workspace.Enemies:FindFirstChild(mobName:sub(1,-2))
-                
-                if not mob then
-                    -- Se não tem mob, vai pro NPC pegar missão
-                    self:Tween(npcPos)
-                else
-                    -- Farm Inteligente: Fica em cima do mob girando para evitar hit
-                    local root = game.Players.LocalPlayer.Character.HumanoidRootPart
-                    root.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0, self.Height, 0) * CFrame.Angles(math.rad(-90), 0, 0)
-                    root.Velocity = Vector3.new(0,0,0) -- Bypass de queda
-                    self:Attack(mob)
-                end
-            end)
-        end
-    end)
-end
+-- O retorno OBRIGATÓRIO para o Loader não dar erro:
+return MoonLibData
 
