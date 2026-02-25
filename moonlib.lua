@@ -1,7 +1,11 @@
+
 --[[ 
-    MOONLIB - FULL ORIGINAL SOURCE 
+    MOONLIB - FULL ORIGINAL SOURCE
     PROPERTY OF MOON CAT | MOON CAT HUB
     BASE: REDZ (FULL UNCOMPRESSED)
+    
+    LINK OFICIAL: https://mooncat-hub.github.io/Moonlib/
+    LOADSTRING: loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/moonlib.lua"))()
 ]]
 
 local MoonLib = {}
