@@ -3,51 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoonLib | Official Hub</title>
+    <title>MOONLIB | ACCESS</title>
     <style>
-        body {
-            background-color: #0a0a0a;
-            color: #bc13fe;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
+
+        :root {
+            --primary: #FF2400; /* Escarlate */
+            --bg: #000000; /* Preto Absoluto */
+            --glass: rgba(15, 15, 15, 0.8);
         }
-        .container {
-            border: 2px solid #bc13fe;
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .login-box {
+            background: var(--glass);
+            border: 1px solid rgba(255, 36, 0, 0.3);
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 0 20px #bc13fe;
-            background: rgba(188, 19, 254, 0.05);
+            backdrop-filter: blur(15px);
+            width: 350px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 36, 0, 0.1);
+            text-align: center;
         }
-        h1 { font-size: 3rem; margin-bottom: 10px; text-shadow: 0 0 10px #bc13fe; }
-        p { color: #fff; font-size: 1.2rem; opacity: 0.8; }
-        .code-box {
-            background: #151515;
-            padding: 15px;
-            border-radius: 8px;
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid #333;
-            color: #00ff00;
-            font-family: monospace;
-            margin-top: 20px;
-            cursor: pointer;
-            word-break: break-all;
+            border-radius: 5px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
         }
-        .footer { margin-top: 30px; font-size: 0.8rem; color: #555; }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: var(--primary);
+            border: none;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+        }
+
+        .btn-auth:hover {
+            box-shadow: 0 0 25px var(--primary);
+            transform: scale(1.02);
+        }
+
+        .toggle-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .toggle-link span {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Animação sutil de fundo */
+        .glow-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: -1;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌙 MoonLib</h1>
-        <p>A biblioteca definitiva reivindicada por Moon Cat.</p>
-        <div class="code-box">
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/moonlib.lua"))()
-        </div>
-        <div class="footer">versão beta proibido divulgar sem autorização</div>
+
+<div class="glow-circle"></div>
+
+<div class="login-box" id="authBox">
+    <h2 id="formTitle">LOGIN</h2>
+    
+    <input type="text" class="input-field" id="user" placeholder="USUÁRIO">
+    <input type="password" class="input-field" id="pass" placeholder="SENHA">
+    
+    <button class="btn-auth" onclick="iniciarSessao()">ACESSAR</button>
+
+    <div class="toggle-link">
+        <p id="toggleText">Ainda não tem conta? <span onclick="toggleAuth()">CRIAR AGORA</span></p>
     </div>
+</div>
+
+<script>
+    let isLogin = true;
+
+    function toggleAuth() {
+        isLogin = !isLogin;
+        const title = document.getElementById('formTitle');
+        const text = document.getElementById('toggleText');
+        
+        if (isLogin) {
+            title.innerText = 'LOGIN';
+            text.innerHTML = 'Ainda não tem conta? <span onclick="toggleAuth()">CRIAR AGORA</span>';
+        } else {
+            title.innerText = 'REGISTRO';
+            text.innerHTML = 'Já possui conta? <span onclick="toggleAuth()">ENTRAR</span>';
+        }
+    }
+
+    function iniciarSessao() {
+        const user = document.getElementById('user').value;
+        if(user === "") {
+            alert("Digite o usuário!");
+            return;
+        }
+        alert("Bem-vindo à MoonLib, " + user + "!");
+        // Aqui depois a gente faz ele redirecionar para a Home do Hub
+    }
+</script>
+
 </body>
 </html>
