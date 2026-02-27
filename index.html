@@ -8,96 +8,189 @@
         :root {
             --primary: #00ffcc;
             --secondary: #ffcc00;
-            --bg-dark: #050505;
-            --card-bg: #111111;
-            --text: #ffffff;
+            --bg: #080808;
+            --card-bg: #121212;
+            --input-bg: #1a1a1a;
         }
 
-        /* O site começa ESCONDIDO */
-        #mainContent { display: none; }
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-        /* Estilo da tela de bloqueio */
-        #blocker {
-            display: none; /* Começa escondido também */
-            background: #000;
-            color: #fff;
-            height: 100vh;
-            width: 100vw;
+        /* LOGIN UI */
+        #login-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 9999;
-            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg);
+            display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            font-family: sans-serif;
+            z-index: 1000;
         }
 
-        body { background-color: var(--bg-dark); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .wrapper { display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
-        .sidebar { background: var(--card-bg); border-right: 1px solid #222; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
-        .logo { font-size: 2rem; font-weight: bold; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-        .main-content { padding: 40px; overflow-y: auto; }
-        .header-banner { background: linear-gradient(90deg, #111, #1a1a1a); padding: 40px; border-radius: 15px; border: 1px solid #333; margin-bottom: 30px; }
-        .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid #222; }
-        .discord-btn { background: #222; color: #555; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: not-allowed; margin-top: auto; }
+        .login-box {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--primary);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: var(--input-bg);
+            border: 1px solid #333;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: none;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* DASHBOARD (ESCONDIDO INICIALMENTE) */
+        #dashboard {
+            display: none;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        header h1 { color: var(--primary); margin: 0; font-size: 3rem; }
+        header p { color: var(--secondary); font-style: italic; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .card h3 { color: var(--primary); margin-top: 0; }
+
+        /* ÁREA DE SCRIPTS SEPARADA */
+        .script-box {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 10px;
+        }
+
+        .tag-pc { color: #55aaff; font-weight: bold; }
+        .tag-mobile { color: #ff55ff; font-weight: bold; }
+
+        .btn-copy {
+            background: #222;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* DISCORD BUTTON */
+        .btn-off {
+            background: #222;
+            color: #555;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
 
-    <div id="blocker">
-        <h1 style="color:var(--primary);">MoonLib</h1>
-        <p style="font-size:1.2rem;">Opa, aqui é o <b>MoonCat</b>!</p>
-        <div style="border: 1px solid var(--secondary); padding: 20px; border-radius: 10px; max-width: 80%;">
-            O site é mais brabo no modo computador.<br><br>
-            <b>Ative a opção "Para Computador" no seu navegador para entrar!</b>
+    <div id="login-screen">
+        <div class="login-box">
+            <h1 style="color: var(--primary);">MoonLib</h1>
+            <p>Acesse sua biblioteca</p>
+            <input type="text" id="username" placeholder="Usuário">
+            <input type="password" id="password" placeholder="Senha">
+            <button class="btn-login" onclick="entrar()">ENTRAR</button>
         </div>
     </div>
 
-    <div id="mainContent" class="wrapper">
-        <aside class="sidebar">
-            <div class="logo">MoonLib</div>
-            <div style="color:var(--primary)">🏠 Dashboard</div>
-            <div style="color:#666">⚔️ Scripts Hub</div>
-            <div style="color:#666">🍎 Trades</div>
-            <button class="discord-btn">DISCORD INDISPONÍVEL</button>
-        </aside>
+    <div id="dashboard">
+        <header>
+            <h1>MoonLib Dashboard</h1>
+            <p>"quer divulgar divulgue mísera kk"</p>
+        </header>
 
-        <main class="main-content">
-            <div class="header-banner">
-                <h1>Painel MoonLib</h1>
-                <p style="color: var(--secondary);">"Versão beta - quer divulgar divulgue mísera kk"</p>
+        <div class="grid-container">
+            <div class="card">
+                <h3>🖥️ Scripts para PC</h3>
+                <p>Otimizados para máxima performance no computador.</p>
+                <div class="script-box">
+                    <span class="tag-pc">[PC ONLY]</span> Cloud Hub V3
+                    <button class="btn-copy" onclick="alert('Script PC copiado!')">Copiar</button>
+                </div>
             </div>
 
-            <div class="grid-stats">
-                <div class="card"><h3>Cloud Hub</h3><p style="color:var(--primary)">Online</p></div>
-                <div class="card"><h3>Sua Honra</h3><p>Status: <b>Lendário</b></p></div>
-                <div class="card"><h3>Dark Blade</h3><p>Buscando Trade...</p></div>
+            <div class="card">
+                <h3>📱 Scripts para Mobile</h3>
+                <p>Interface adaptada para telas touch e executores leves.</p>
+                <div class="script-box">
+                    <span class="tag-mobile">[MOBILE]</span> Cloud Hub Lite
+                    <button class="btn-copy" onclick="alert('Script Mobile copiado!')">Copiar</button>
+                </div>
             </div>
-        </main>
+
+            <div class="card">
+                <h3>🍎 Status MoonCat</h3>
+                <p>Honra: <b>Lendário (6 Raids/Buddha Free)</b></p>
+                <p>Buscando: <b>Dark Blade (No Trade!)</b></p>
+                <button class="btn-off">DISCORD INDISPONÍVEL</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        function checkDevice() {
-            const blocker = document.getElementById('blocker');
-            const content = document.getElementById('mainContent');
-
-            // Se a largura da tela for menor que 1024px (Celular em modo normal)
-            if (window.innerWidth < 1024) {
-                blocker.style.display = 'flex';
-                content.style.display = 'none';
+        function entrar() {
+            // Login simples para demonstração
+            const user = document.getElementById('username').value;
+            if(user != "") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
             } else {
-                // Se for maior ou igual a 1024px (PC ou Celular em Modo Computador)
-                blocker.style.display = 'none';
-                content.style.display = 'grid';
+                alert("Digite seu nome de usuário da MoonLib!");
             }
         }
-
-        // Roda a função ao carregar e ao mudar o tamanho da tela
-        window.onload = checkDevice;
-        window.onresize = checkDevice;
     </script>
 </body>
 </html>
