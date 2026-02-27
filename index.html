@@ -3,154 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOONLIB | ACCESS</title>
+    <title>MOONLIB | OFFICIAL HUB</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
 
         :root {
             --primary: #FF2400; /* Escarlate */
-            --bg: #000000; /* Preto Absoluto */
-            --glass: rgba(15, 15, 15, 0.8);
+            --bg: #000000;
+            --glass: rgba(15, 15, 15, 0.9);
         }
 
         body {
             margin: 0;
-            padding: 0;
             background-color: var(--bg);
             background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
             color: white;
             font-family: 'Rajdhani', sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            overflow: hidden;
         }
 
+        /* --- AVISO CUSTOMIZADO (ADEUS "DIZ") --- */
+        .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; }
+        .custom-alert {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--glass); border: 2px solid var(--primary); padding: 30px; border-radius: 15px;
+            z-index: 3001; text-align: center; box-shadow: 0 0 30px var(--primary); width: 300px;
+        }
+        .custom-alert h3 { font-family: 'Orbitron'; color: var(--primary); margin: 0 0 15px 0; }
+
+        /* --- LOGIN BOX --- */
+        #auth-section { height: 100vh; display: flex; justify-content: center; align-items: center; }
         .login-box {
-            background: var(--glass);
-            border: 1px solid rgba(255, 36, 0, 0.3);
-            padding: 40px;
-            border-radius: 15px;
-            backdrop-filter: blur(15px);
-            width: 350px;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 36, 0, 0.1);
-            text-align: center;
+            background: var(--glass); border: 1px solid rgba(255, 36, 0, 0.3); padding: 40px;
+            border-radius: 15px; backdrop-filter: blur(15px); width: 320px; text-align: center;
         }
 
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--primary);
-            letter-spacing: 5px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px var(--primary);
-        }
+        /* --- DASHBOARD (SÓ APARECE DEPOIS DO LOGIN) --- */
+        #main-hub { display: none; width: 90%; max-width: 1000px; padding: 40px 0; }
+        header { text-align: center; margin-bottom: 50px; }
+        h1 { font-family: 'Orbitron'; font-size: 50px; color: var(--primary); text-shadow: 0 0 15px var(--primary); margin: 0; }
 
-        .input-field {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: white;
-            outline: none;
-            transition: 0.3s;
-            box-sizing: border-box;
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card {
+            background: rgba(20, 20, 20, 0.8); border-left: 4px solid var(--primary); padding: 20px;
+            border-radius: 5px; transition: 0.3s;
         }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 0 20px rgba(255, 36, 0, 0.2); }
 
-        .input-field:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary);
+        /* --- BOTÕES E INPUTS --- */
+        input, textarea {
+            width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333;
+            color: white; border-radius: 5px; box-sizing: border-box; outline: none;
         }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+        
+        .btn {
+            width: 100%; padding: 12px; background: var(--primary); border: none; color: white;
+            font-family: 'Orbitron'; font-weight: bold; cursor: pointer; border-radius: 5px;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); transition: 0.3s;
+        }
+        .btn:hover { box-shadow: 0 0 20px var(--primary); transform: scale(1.02); }
 
-        .btn-auth {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background: var(--primary);
-            border: none;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
-        }
-
-        .btn-auth:hover {
-            box-shadow: 0 0 25px var(--primary);
-            transform: scale(1.02);
-        }
-
-        .toggle-link {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #888;
-        }
-
-        .toggle-link span {
-            color: var(--primary);
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        /* Animação sutil de fundo */
-        .glow-circle {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--primary);
-            filter: blur(150px);
-            opacity: 0.15;
-            z-index: -1;
-            border-radius: 50%;
-        }
+        .tag { font-size: 10px; background: #300; color: var(--primary); padding: 3px 8px; border-radius: 3px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="glow-circle"></div>
-
-<div class="login-box" id="authBox">
-    <h2 id="formTitle">LOGIN</h2>
-    
-    <input type="text" class="input-field" id="user" placeholder="USUÁRIO">
-    <input type="password" class="input-field" id="pass" placeholder="SENHA">
-    
-    <button class="btn-auth" onclick="iniciarSessao()">ACESSAR</button>
-
-    <div class="toggle-link">
-        <p id="toggleText">Ainda não tem conta? <span onclick="toggleAuth()">CRIAR AGORA</span></p>
-    </div>
+<div class="alert-overlay" id="alertOverlay"></div>
+<div class="custom-alert" id="customAlert">
+    <h3>MOONLIB SYSTEM</h3>
+    <p id="alertMessage"></p>
+    <button class="btn" onclick="fecharAviso()" style="width: auto; padding: 5px 20px;">OK</button>
 </div>
 
-<script>
-    let isLogin = true;
+<section id="auth-section">
+    <div class="login-box">
+        <h2 id="authTitle" style="font-family:'Orbitron'; color:var(--primary);">LOGIN</h2>
+        <input type="text" id="user" placeholder="USUÁRIO">
+        <input type="password" id="pass" placeholder="SENHA">
+        <button class="btn" onclick="logar()">ACESSAR HUB</button>
+        <p style="font-size: 12px; color: #666; margin-top: 15px; cursor: pointer;" onclick="toggleAuth()">CRIAR CONTA</p>
+    </div>
+</section>
 
-    function toggleAuth() {
-        isLogin = !isLogin;
-        const title = document.getElementById('formTitle');
-        const text = document.getElementById('toggleText');
-        
-        if (isLogin) {
-            title.innerText = 'LOGIN';
-            text.innerHTML = 'Ainda não tem conta? <span onclick="toggleAuth()">CRIAR AGORA</span>';
-        } else {
-            title.innerText = 'REGISTRO';
-            text.innerHTML = 'Já possui conta? <span onclick="toggleAuth()">ENTRAR</span>';
-        }
+<main id="main-hub">
+    <header>
+        <h1>MOONLIB</h1>
+        <p style="letter-spacing: 3px; color: #888;">THE ABSOLUTE HUB</p>
+    </header>
+
+    <div style="background: var(--glass); padding: 20px; border-radius: 10px; border: 1px solid #222; margin-bottom: 40px;">
+        <h3 style="color: var(--primary); font-family: 'Orbitron';">POSTAR NOVO SCRIPT</h3>
+        <input type="text" id="scriptName" placeholder="Nome do Script">
+        <textarea id="scriptCode" placeholder="Cole o código Lua aqui..." style="height: 100px; font-family: monospace;"></textarea>
+        <button class="btn" style="width: 200px;" onclick="enviarScript()">PUBLICAR</button>
+    </div>
+
+    <div class="grid" id="scriptList">
+        <div class="card">
+            <span class="tag">EXEMPLO</span>
+            <h3>MoonLib Admin</h3>
+            <p>Script base da biblioteca para testes.</p>
+            <button class="btn" style="padding: 5px; font-size: 12px;">COPIAR</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    function mostrarAviso(msg) {
+        document.getElementById('alertMessage').innerText = msg;
+        document.getElementById('customAlert').style.display = 'block';
+        document.getElementById('alertOverlay').style.display = 'block';
     }
 
-    function iniciarSessao() {
-        const user = document.getElementById('user').value;
-        if(user === "") {
-            alert("Digite o usuário!");
-            return;
-        }
-        alert("Bem-vindo à MoonLib, " + user + "!");
-        // Aqui depois a gente faz ele redirecionar para a Home do Hub
+    function fecharAviso() {
+        document.getElementById('customAlert').style.display = 'none';
+        document.getElementById('alertOverlay').style.display = 'none';
+    }
+
+    function toggleAuth() {
+        const t = document.getElementById('authTitle');
+        t.innerText = t.innerText === "LOGIN" ? "REGISTRO" : "LOGIN";
+    }
+
+    function logar() {
+        const u = document.getElementById('user').value;
+        if(u === "") return mostrarAviso("DIGITE O USUÁRIO!");
+        
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('main-hub').style.display = 'block';
+        mostrarAviso("BEM-VINDO, " + u.toUpperCase());
+    }
+
+    function enviarScript() {
+        const nome = document.getElementById('scriptName').value;
+        if(nome === "") return mostrarAviso("NOME VAZIO?");
+        
+        const list = document.getElementById('scriptList');
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <span class="tag">COMUNIDADE</span>
+            <h3>${nome}</h3>
+            <p>Script enviado via MoonLib Hub.</p>
+            <button class="btn" style="padding: 5px; font-size: 12px;">COPIAR</button>
+        `;
+        list.prepend(card);
+        mostrarAviso("SCRIPT PUBLICADO!");
     }
 </script>
 
