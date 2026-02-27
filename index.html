@@ -3,205 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOONLIB | NEXT GEN CLOUD HUB</title>
+    <title>MOONLIB | CLOUD HUB PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --p: #00ffcc; --s: #ffcc00; --bg: #030303; --card: rgba(10, 10, 10, 0.98);
-            --border: rgba(0, 255, 204, 0.2); --glow: 0 0 25px rgba(0, 255, 204, 0.2);
+            --p: #00ffcc; --bg: #030303; --card: rgba(10, 10, 10, 0.98);
+            --border: rgba(0, 255, 204, 0.2); --glow: 0 0 20px rgba(0, 255, 204, 0.2);
+            --sidebar-w: 250px; --sidebar-collapsed: 70px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; min-height: 100vh; }
+        body { background: var(--bg); color: #fff; font-family: 'JetBrains Mono', monospace; overflow-x: hidden; min-height: 100vh; }
 
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+        #bg-canvas { position: fixed; inset: 0; z-index: -1; opacity: 0.15; }
 
+        /* LOADER */
         #loader {
             position: fixed; inset: 0; background: #000; z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: 1s ease;
         }
-        .load-bar { width: 250px; height: 2px; background: #111; margin-top: 20px; position: relative; overflow: hidden; }
-        .load-progress { position: absolute; height: 100%; background: var(--p); width: 0%; animation: load 2.5s forwards; }
+        .load-bar { width: 200px; height: 2px; background: #111; margin-top: 20px; position: relative; overflow: hidden; }
+        .load-progress { position: absolute; height: 100%; background: var(--p); width: 0%; animation: load 2s forwards; }
         @keyframes load { to { width: 100%; } }
 
+        /* LOGIN */
         #auth { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .auth-box { background: var(--card); border: 1px solid var(--border); padding: 50px; border-radius: 5px; width: 90%; max-width: 450px; text-align: center; box-shadow: var(--glow); }
-        .auth-box h1 { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--p); margin-bottom: 30px; }
-        
-        input, textarea { width: 100%; background: #000; border: 1px solid #222; padding: 15px; color: var(--p); font-family: 'Courier New'; margin-bottom: 15px; outline: none; border-radius: 5px; }
-        
-        .btn-glitch { width: 100%; padding: 15px; background: var(--p); color: #000; font-weight: 900; text-transform: uppercase; cursor: pointer; border: none; clip-path: polygon(7% 0, 100% 0, 100% 70%, 93% 100%, 0 100%, 0% 30%); }
+        .auth-box { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 8px; width: 90%; max-width: 400px; text-align: center; }
+        input, textarea, select { width: 100%; background: #000; border: 1px solid #222; padding: 12px; color: var(--p); font-family: inherit; margin-bottom: 15px; outline: none; border-radius: 4px; }
+        .btn-p { width: 100%; padding: 12px; background: var(--p); color: #000; font-weight: 900; cursor: pointer; border: none; text-transform: uppercase; }
 
-        #dash { display: none; padding: 30px; opacity: 0; transition: 1s; margin-left: 80px; }
+        /* SIDEBAR RETRÁTIL */
+        #sidebar {
+            position: fixed; left: 0; top: 0; height: 100%;
+            width: var(--sidebar-collapsed);
+            background: #050505; border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; 
+            z-index: 500; transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+        #sidebar.expanded { width: var(--sidebar-w); }
 
-        .side-nav { position: fixed; left: 0; top: 0; height: 100%; width: 80px; background: rgba(5,5,5,0.95); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 30px; gap: 40px; z-index: 500; }
-        .nav-icon { color: #444; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
-        .nav-icon:hover, .nav-icon.active { color: var(--p); text-shadow: 0 0 10px var(--p); }
+        .moon-toggle {
+            height: 70px; width: 70px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: var(--p); cursor: pointer;
+            transition: 0.3s;
+        }
+        .moon-toggle:hover { filter: drop-shadow(0 0 8px var(--p)); }
 
-        .header-info { margin-bottom: 50px; display: flex; justify-content: space-between; align-items: center; }
-        .header-info h2 { font-family: 'Orbitron'; font-size: 2rem; }
+        .nav-items { flex: 1; display: flex; flex-direction: column; padding: 10px; gap: 10px; opacity: 0; pointer-events: none; transition: 0.3s; }
+        #sidebar.expanded .nav-items { opacity: 1; pointer-events: all; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
-        .box { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; position: relative; transition: 0.3s; }
-        .box:hover { border-color: var(--p); transform: translateY(-5px); }
+        .nav-link {
+            display: flex; align-items: center; gap: 15px; padding: 15px;
+            color: #444; text-decoration: none; border-radius: 5px; cursor: pointer;
+            transition: 0.3s; font-family: 'Orbitron'; font-size: 0.9rem;
+        }
+        .nav-link i { min-width: 30px; text-align: center; font-size: 1.2rem; }
+        .nav-link:hover, .nav-link.active { background: rgba(0, 255, 204, 0.05); color: var(--p); }
 
-        .tag { font-size: 0.7rem; font-weight: bold; color: var(--p); border: 1px solid var(--p); padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 15px; }
+        /* DASHBOARD CONTENT */
+        #dash { 
+            display: none; 
+            margin-left: var(--sidebar-collapsed); 
+            padding: 40px; opacity: 0; transition: margin-left 0.4s; 
+        }
 
-        .script-area { background: #000; border: 1px solid #111; padding: 15px; font-family: monospace; font-size: 0.8rem; color: #666; margin: 15px 0; border-radius: 5px; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto; }
+        /* GRID SCRIPTS */
+        .grid { display: none; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
+        .grid.active { display: grid; }
+        .box { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 20px; transition: 0.3s; }
+        .box:hover { border-color: var(--p); transform: translateY(-3px); }
 
-        .btn-copy { background: transparent; border: 1px solid var(--p); color: var(--p); padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-bottom: 5px; }
-        .btn-copy:hover { background: var(--p); color: #000; }
-        .btn-del { background: transparent; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
+        .script-area { background: #000; padding: 12px; font-size: 0.75rem; color: #555; margin: 10px 0; border-radius: 4px; overflow-x: auto; }
 
-        /* MODAL ADICIONAR */
-        #add-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: #0a0a0a; border: 1px solid var(--p); padding: 40px; border-radius: 10px; width: 90%; max-width: 600px; }
+        /* TERMINAL */
+        #terminal-window { position: fixed; bottom: 20px; right: 20px; width: 500px; height: 350px; background: #000; border: 1px solid var(--p); border-radius: 8px; display: none; flex-direction: column; z-index: 3000; }
+        .term-header { background: #111; padding: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; }
+        #term-body { flex: 1; padding: 15px; font-size: 0.85rem; overflow-y: auto; color: #0f0; }
+        #term-input { background: transparent; border: none; color: #fff; width: 100%; padding: 10px; border-top: 1px solid #111; }
 
-        #notif { position: fixed; top: 20px; right: 20px; background: var(--p); color: #000; padding: 15px 30px; border-radius: 5px; font-weight: 900; z-index: 10001; display: none; animation: slideIn 0.3s; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        #notif { position: fixed; top: 20px; right: 20px; background: var(--p); color: #000; padding: 10px 25px; border-radius: 4px; font-weight: bold; z-index: 10001; display: none; }
 
-        @media (max-width: 768px) { #dash { margin-left: 0; padding-bottom: 100px; } .side-nav { width: 100%; height: 60px; top: auto; bottom: 0; flex-direction: row; justify-content: space-around; padding: 0; border-right: none; border-top: 1px solid var(--border); } }
+        @media (max-width: 768px) {
+            #sidebar.expanded { width: 100%; }
+            #dash { margin-left: 0; padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-<div id="loader">
-    <h1 style="font-family: Orbitron; color: var(--p); letter-spacing: 5px;">MOONLIB</h1>
-    <div class="load-bar"><div class="load-progress"></div></div>
-</div>
-
 <canvas id="bg-canvas"></canvas>
 <div id="notif">COPIADO!</div>
 
+<div id="loader">
+    <h1 style="font-family: Orbitron; color: var(--p);">MOONLIB</h1>
+    <div class="load-bar"><div class="load-progress"></div></div>
+</div>
+
 <div id="auth">
     <div class="auth-box">
-        <h1>LOGIN</h1>
+        <h1 style="font-family: Orbitron; color: var(--p); margin-bottom: 20px;">SYSTEM LOGIN</h1>
         <input type="text" id="u" placeholder="USUÁRIO">
-        <input type="password" id="k" placeholder="CHAVE">
-        <button class="btn-glitch" onclick="login()">ACESSAR HUB</button>
+        <button class="btn-p" onclick="login()">ENTER</button>
     </div>
 </div>
+
+<nav id="sidebar">
+    <div class="moon-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-moon"></i>
+    </div>
+
+    <div class="nav-items">
+        <div class="nav-link active" onclick="switchTab('pc', this)">
+            <i class="fa-solid fa-desktop"></i> PC SCRIPTS
+        </div>
+        <div class="nav-link" onclick="switchTab('mobile', this)">
+            <i class="fa-solid fa-mobile-screen"></i> MOBILE SCRIPTS
+        </div>
+        <div class="nav-link" onclick="openModal()">
+            <i class="fa-solid fa-plus"></i> ADD SCRIPT
+        </div>
+        <div class="nav-link" onclick="toggleTerminal()">
+            <i class="fa-solid fa-terminal"></i> TERMINAL
+        </div>
+        <div style="margin-top: auto;" class="nav-link" onclick="location.reload()">
+            <i class="fa-solid fa-right-from-bracket"></i> LOGOUT
+        </div>
+    </div>
+</nav>
 
 <div id="dash">
-    <nav class="side-nav">
-        <i class="fa fa-home nav-icon active"></i>
-        <i class="fa fa-plus-circle nav-icon" onclick="openModal()"></i>
-        <i class="fa fa-terminal nav-icon"></i>
-        <i class="fa fa-sign-out nav-icon" onclick="location.reload()"></i>
-    </nav>
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <h2 style="font-family: Orbitron;">CLOUD HUB <span style="color: var(--p);">V3</span></h2>
+        <div id="user-display" style="color: var(--p); font-weight: bold;">GUEST@MOONLIB</div>
+    </header>
 
-    <main>
-        <div class="header-info">
-            <h2>CLOUD HUB <font color="#00ffcc">DASHBOARD</font></h2>
-            <div id="user-pill" style="background: rgba(0,255,204,0.1); border: 1px solid var(--p); padding: 5px 20px; border-radius: 50px; font-weight: bold; color: var(--p);">GUEST</div>
+    <div class="grid active" id="grid-pc">
+        <div class="box">
+            <span style="font-size: 0.6rem; color: var(--p); border: 1px solid var(--p); padding: 2px 8px;">CORE PC</span>
+            <h3>MoonLib Ultimate PC</h3>
+            <div class="script-area">loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()</div>
+            <button class="btn-p" style="background: transparent; color: var(--p); border: 1px solid var(--p);" onclick="copyThis(this)">COPIAR</button>
         </div>
+    </div>
 
-        <div class="grid" id="script-grid">
-            <div class="box">
-                <span class="tag">DESENVOLVIMENTO</span>
-                <h3>MoonLib Core PC</h3>
-                <p style="color:#555; font-size:0.8rem;">Script principal para PC. (Em andamento)</p>
-                <div class="script-area">loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()</div>
-                <button class="btn-copy" onclick="copyCode(this)">COPIAR</button>
-            </div>
-            <div class="box">
-                <span class="tag">DESENVOLVIMENTO</span>
-                <h3>MoonLib Lite Mobile</h3>
-                <p style="color:#555; font-size:0.8rem;">Otimizado para dispositivos móveis. (Em andamento)</p>
-                <div class="script-area">loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()</div>
-                <button class="btn-copy" onclick="copyCode(this)">COPIAR</button>
-            </div>
+    <div class="grid" id="grid-mobile">
+        <div class="box">
+            <span style="font-size: 0.6rem; color: var(--p); border: 1px solid var(--p); padding: 2px 8px;">CORE MOBILE</span>
+            <h3>MoonLib Lite Mobile</h3>
+            <div class="script-area">loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()</div>
+            <button class="btn-p" style="background: transparent; color: var(--p); border: 1px solid var(--p);" onclick="copyThis(this)">COPIAR</button>
         </div>
-    </main>
+    </div>
 </div>
 
-<div id="add-modal">
-    <div class="modal-content">
-        <h2 style="font-family: Orbitron; color: var(--p); margin-bottom: 20px;">NOVO SCRIPT</h2>
-        <input type="text" id="sc-title" placeholder="TÍTULO DO SCRIPT">
-        <input type="text" id="sc-tag" placeholder="TAG (EX: FARM, PVP, NOVO)">
-        <textarea id="sc-code" rows="5" placeholder="COLE O CÓDIGO/LOADSTRING AQUI"></textarea>
-        <button class="btn-glitch" onclick="addScript()">ADICIONAR AO HUB</button>
-        <button class="btn-copy" style="margin-top: 10px; border-color: #333; color: #555;" onclick="closeModal()">CANCELAR</button>
+<div id="add-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 4000;">
+    <div class="auth-box" style="max-width: 500px;">
+        <h2 style="margin-bottom: 20px; color: var(--p);">NOVO SCRIPT</h2>
+        <input type="text" id="new-title" placeholder="Nome do Script">
+        <select id="new-platform"><option value="pc">PC</option><option value="mobile">Mobile</option></select>
+        <textarea id="new-code" placeholder="Loadstring" rows="4"></textarea>
+        <button class="btn-p" onclick="manualAdd()">SALVAR SCRIPT</button>
+        <p style="margin-top: 10px; cursor: pointer; font-size: 0.8rem; color: #555;" onclick="closeModal()">FECHAR</p>
     </div>
+</div>
+
+<div id="terminal-window">
+    <div class="term-header"><span>MOONLIB ROOT</span><span onclick="toggleTerminal()" style="cursor: pointer; color: #ff4444;">[X]</span></div>
+    <div id="term-body"><div>MoonLib Terminal Ready...</div></div>
+    <input type="text" id="term-input" placeholder="root@mooncat:~$" onkeydown="handleTerminal(event)">
 </div>
 
 <script>
-    // Fundo Matrix
+    // Matrix BG
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const letters = "01"; const fontSize = 12; const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    const drops = Array(Math.floor(canvas.width/15)).fill(1);
     function draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#0f0'; ctx.font = fontSize + 'px monospace';
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters[Math.floor(Math.random() * letters.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#0f0'; ctx.font = '15px monospace';
+        drops.forEach((y, i) => {
+            ctx.fillText(Math.floor(Math.random()*2), i*15, y*15);
+            if(y*15 > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
-        }
+        });
     }
-    setInterval(draw, 40);
+    setInterval(draw, 50);
 
-    // Sistema de Login
+    // Sidebar Toggle
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const dash = document.getElementById('dash');
+        sidebar.classList.toggle('expanded');
+    }
+
+    // Login & Tabs
     function login() {
-        const u = document.getElementById('u').value;
-        if(u === "") return alert("INSIRA O USUÁRIO");
-        document.getElementById('user-pill').innerText = u.toUpperCase();
+        const user = document.getElementById('u').value || "MoonCat";
+        document.getElementById('user-display').innerText = user.toUpperCase() + "@MOONLIB";
         document.getElementById('auth').style.display = 'none';
         document.getElementById('dash').style.display = 'block';
-        setTimeout(() => document.getElementById('dash').style.opacity = '1', 100);
+        setTimeout(() => document.getElementById('dash').style.opacity = '1', 50);
     }
 
-    // Modal
-    function openModal() { document.getElementById('add-modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('add-modal').style.display = 'none'; }
+    function switchTab(platform, btn) {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.grid').forEach(g => g.classList.remove('active'));
+        document.getElementById('grid-' + platform).classList.add('active');
+        if(window.innerWidth < 768) toggleSidebar(); // Fecha no mobile ao clicar
+    }
 
-    // Adicionar Script (Salva no LocalStorage para não perder ao dar F5)
-    function addScript() {
-        const title = document.getElementById('sc-title').value;
-        const tag = document.getElementById('sc-tag').value || 'CUSTOM';
-        const code = document.getElementById('sc-code').value;
+    // Terminal & Modal functions
+    function toggleTerminal() {
+        const t = document.getElementById('terminal-window');
+        t.style.display = t.style.display === 'flex' ? 'none' : 'flex';
+        if(t.style.display === 'flex') document.getElementById('term-input').focus();
+    }
+    function handleTerminal(e) {
+        if(e.key === 'Enter') {
+            const body = document.getElementById('term-body');
+            const res = document.createElement('div');
+            res.innerText = "> " + e.target.value;
+            body.appendChild(res);
+            e.target.value = '';
+        }
+    }
+    function openModal() { document.getElementById('add-modal').style.display='flex'; }
+    function closeModal() { document.getElementById('add-modal').style.display='none'; }
 
-        if(!title || !code) return alert("PREENCHA O TÍTULO E O CÓDIGO");
-
-        const grid = document.getElementById('script-grid');
-        const div = document.createElement('div');
-        div.className = 'box';
-        div.innerHTML = `
-            <span class="tag">${tag.toUpperCase()}</span>
-            <h3>${title}</h3>
-            <div class="script-area">${code}</div>
-            <button class="btn-copy" onclick="copyCode(this)">COPIAR</button>
-            <button class="btn-del" onclick="this.parentElement.remove()">DELETAR</button>
-        `;
-        grid.appendChild(div);
+    function manualAdd() {
+        const t = document.getElementById('new-title').value;
+        const p = document.getElementById('new-platform').value;
+        const c = document.getElementById('new-code').value;
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.innerHTML = `<span style="font-size: 0.6rem; color: var(--p); border: 1px solid var(--p); padding: 2px 8px;">ADDED</span><h3>${t}</h3><div class="script-area">${c}</div><button class="btn-p" style="background:transparent;color:var(--p);border:1px solid var(--p);" onclick="copyThis(this)">COPIAR</button>`;
+        document.getElementById('grid-' + p).appendChild(box);
         closeModal();
-        notify("SCRIPT ADICIONADO!");
-        
-        // Limpar campos
-        document.getElementById('sc-title').value = '';
-        document.getElementById('sc-code').value = '';
     }
 
-    function copyCode(btn) {
-        const code = btn.parentElement.querySelector('.script-area').innerText;
-        navigator.clipboard.writeText(code);
-        notify("COPIADO!");
+    function copyThis(btn) {
+        navigator.clipboard.writeText(btn.parentElement.querySelector('.script-area').innerText);
+        const n = document.getElementById('notif'); n.style.display='block';
+        setTimeout(()=>n.style.display='none', 2000);
     }
 
-    function notify(msg) {
-        const n = document.getElementById('notif');
-        n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => n.style.display = 'none', 2000);
-    }
-
-    window.onload = () => { setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2600); };
+    window.onload = () => setTimeout(() => document.getElementById('loader').style.display='none', 2000);
 </script>
 
 </body>
