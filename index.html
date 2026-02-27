@@ -3,361 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoonLib | Cloud Hub Premium</title>
+    <title>MOONLIB | NEXT GEN CLOUD HUB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* MOONLIB CLOUD HUB - CORE SYSTEM
-           DEVELOPED BY: MoonCat [cite: 2026-02-25]
-           VERSION: 3.0.0 BETA
-        */
-
         :root {
-            --primary: #00ffcc;
-            --secondary: #ffcc00;
-            --accent: #9b59b6;
-            --danger: #ff4444;
-            --bg-dark: #020202;
-            --panel-bg: rgba(10, 10, 10, 0.98);
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(0, 255, 204, 0.2);
-            --text-p: #ffffff;
-            --text-s: #888888;
-            --glow: 0 0 20px rgba(0, 255, 204, 0.3);
+            --p: #00ffcc; --s: #ffcc00; --bg: #030303; --card: rgba(10, 10, 10, 0.98);
+            --border: rgba(0, 255, 204, 0.2); --glow: 0 0 25px rgba(0, 255, 204, 0.2);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; min-height: 100vh; }
 
-        body {
-            background: var(--bg-dark);
-            color: var(--text-p);
-            overflow-x: hidden;
-            min-height: 100vh;
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+
+        #loader {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: 1s ease;
         }
+        .load-bar { width: 250px; height: 2px; background: #111; margin-top: 20px; position: relative; overflow: hidden; }
+        .load-progress { position: absolute; height: 100%; background: var(--p); width: 0%; animation: load 2.5s forwards; }
+        @keyframes load { to { width: 100%; } }
 
-        /* CANVAS BACKGROUND */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
-        }
+        #auth { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .auth-box { background: var(--card); border: 1px solid var(--border); padding: 50px; border-radius: 5px; width: 90%; max-width: 450px; text-align: center; box-shadow: var(--glow); }
+        .auth-box h1 { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--p); margin-bottom: 30px; }
+        
+        input, textarea { width: 100%; background: #000; border: 1px solid #222; padding: 15px; color: var(--p); font-family: 'Courier New'; margin-bottom: 15px; outline: none; border-radius: 5px; }
+        
+        .btn-glitch { width: 100%; padding: 15px; background: var(--p); color: #000; font-weight: 900; text-transform: uppercase; cursor: pointer; border: none; clip-path: polygon(7% 0, 100% 0, 100% 70%, 93% 100%, 0 100%, 0% 30%); }
 
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #111; border-radius: 10px; border: 1px solid var(--border); }
+        #dash { display: none; padding: 30px; opacity: 0; transition: 1s; margin-left: 80px; }
 
-        /* AUTH INTERFACE */
-        #auth-container {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            background: var(--bg-dark);
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .side-nav { position: fixed; left: 0; top: 0; height: 100%; width: 80px; background: rgba(5,5,5,0.95); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 30px; gap: 40px; z-index: 500; }
+        .nav-icon { color: #444; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .nav-icon:hover, .nav-icon.active { color: var(--p); text-shadow: 0 0 10px var(--p); }
 
-        .auth-card {
-            background: var(--panel-bg);
-            padding: 60px;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            box-shadow: var(--glow);
-        }
+        .header-info { margin-bottom: 50px; display: flex; justify-content: space-between; align-items: center; }
+        .header-info h2 { font-family: 'Orbitron'; font-size: 2rem; }
 
-        .auth-card h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            color: var(--primary);
-            letter-spacing: -2px;
-            margin-bottom: 5px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .box { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; position: relative; transition: 0.3s; }
+        .box:hover { border-color: var(--p); transform: translateY(-5px); }
 
-        .auth-card p { color: var(--text-s); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 40px; }
+        .tag { font-size: 0.7rem; font-weight: bold; color: var(--p); border: 1px solid var(--p); padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 15px; }
 
-        .form-group { position: relative; margin-bottom: 25px; }
+        .script-area { background: #000; border: 1px solid #111; padding: 15px; font-family: monospace; font-size: 0.8rem; color: #666; margin: 15px 0; border-radius: 5px; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto; }
 
-        .form-group input {
-            width: 100%;
-            padding: 18px 25px;
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 15px;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-        }
+        .btn-copy { background: transparent; border: 1px solid var(--p); color: var(--p); padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-bottom: 5px; }
+        .btn-copy:hover { background: var(--p); color: #000; }
+        .btn-del { background: transparent; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
 
-        .form-group input:focus { border-color: var(--primary); background: rgba(0, 255, 204, 0.05); }
+        /* MODAL ADICIONAR */
+        #add-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: #0a0a0a; border: 1px solid var(--p); padding: 40px; border-radius: 10px; width: 90%; max-width: 600px; }
 
-        .btn-auth {
-            width: 100%;
-            padding: 20px;
-            background: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 15px;
-            font-weight: 900;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.4s;
-            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.2);
-        }
+        #notif { position: fixed; top: 20px; right: 20px; background: var(--p); color: #000; padding: 15px 30px; border-radius: 5px; font-weight: 900; z-index: 10001; display: none; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-        .btn-auth:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 255, 204, 0.4); }
-
-        /* MAIN DASHBOARD */
-        #main-app {
-            display: none;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.8s ease;
-            padding: 50px 5%;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 80px;
-        }
-
-        .brand { font-size: 2rem; font-weight: 900; color: var(--primary); }
-        .user-pill { background: var(--glass); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-        .status-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); }
-
-        /* GRID SYSTEM */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 30px;
-        }
-
-        .card-main {
-            grid-column: span 6;
-            background: var(--panel-bg);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 30px;
-            padding: 40px;
-            transition: 0.3s;
-        }
-
-        .card-main:hover { border-color: var(--primary); background: #0a0a0a; }
-
-        .type-tag { font-size: 0.7rem; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; display: block; }
-        .card-main h2 { font-size: 2rem; margin-bottom: 20px; }
-
-        .code-block {
-            background: #000;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9rem;
-            color: #aaa;
-            border: 1px solid #111;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .copy-btn {
-            background: var(--primary);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .copy-btn:hover { opacity: 0.8; }
-
-        /* SIDE PANEL */
-        .side-panel { grid-column: span 4; display: flex; flex-direction: column; gap: 30px; }
-        .mini-card { background: var(--panel-bg); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); }
-        .mini-card h4 { color: var(--secondary); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 10px; }
-
-        /* LOGS SECTION */
-        .logs-container {
-            grid-column: span 12;
-            background: var(--panel-bg);
-            border-radius: 30px;
-            padding: 40px;
-            margin-top: 50px;
-        }
-
-        .log-entry { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; }
-        .log-date { color: var(--text-s); }
-
-        footer { text-align: center; padding: 100px 0 50px; color: #333; font-size: 0.8rem; }
-
-        /* NOTIFICATION SYSTEM */
-        #notif-box { position: fixed; bottom: 30px; right: 30px; z-index: 10000; }
-        .notif { background: var(--primary); color: #000; padding: 20px 40px; border-radius: 15px; font-weight: 900; margin-top: 10px; animation: slideIn 0.5s ease-out; }
-
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        @media (max-width: 1024px) {
-            .card-main { grid-column: span 12; }
-            .side-panel { grid-column: span 12; flex-direction: row; flex-wrap: wrap; }
-            .mini-card { flex: 1; min-width: 250px; }
-        }
-
-        /* EXPANSION CODE FOR 30K SIZE 
-           ..........................
-           ESTRUTURA DE DADOS DA MOONLIB
-           FOCO EM CLOUD HUB E PERFORMANCE
-           MANTIDO POR MOONCAT [cite: 2026-02-25]
-        */
-
+        @media (max-width: 768px) { #dash { margin-left: 0; padding-bottom: 100px; } .side-nav { width: 100%; height: 60px; top: auto; bottom: 0; flex-direction: row; justify-content: space-around; padding: 0; border-right: none; border-top: 1px solid var(--border); } }
     </style>
 </head>
 <body>
 
-    <div id="particles-js"></div>
-    <div id="notif-box"></div>
+<div id="loader">
+    <h1 style="font-family: Orbitron; color: var(--p); letter-spacing: 5px;">MOONLIB</h1>
+    <div class="load-bar"><div class="load-progress"></div></div>
+</div>
 
-    <div id="auth-container">
-        <div class="auth-card">
-            <h1>MoonLib</h1>
-            <p>Cloud Hub Access Control</p>
-            <div class="form-group">
-                <input type="text" id="user-input" placeholder="Seu Username">
-            </div>
-            <div class="form-group">
-                <input type="password" id="pass-input" placeholder="Chave de Acesso">
-            </div>
-            <button class="btn-auth" onclick="startApp()">Autenticar Sistema</button>
-            <div style="margin-top: 30px; font-size: 0.6rem; color: #333; text-transform: uppercase;">
-                Acesso Restrito: MoonCat [cite: 2026-02-25]
-            </div>
-        </div>
+<canvas id="bg-canvas"></canvas>
+<div id="notif">COPIADO!</div>
+
+<div id="auth">
+    <div class="auth-box">
+        <h1>LOGIN</h1>
+        <input type="text" id="u" placeholder="USUÁRIO">
+        <input type="password" id="k" placeholder="CHAVE">
+        <button class="btn-glitch" onclick="login()">ACESSAR HUB</button>
     </div>
+</div>
 
-    <div id="main-app">
-        <header>
-            <div class="brand">MOONLIB</div>
-            <div class="user-pill">
-                <div class="status-dot"></div>
-                <span id="display-name">Guest</span>
-            </div>
-        </header>
+<div id="dash">
+    <nav class="side-nav">
+        <i class="fa fa-home nav-icon active"></i>
+        <i class="fa fa-plus-circle nav-icon" onclick="openModal()"></i>
+        <i class="fa fa-terminal nav-icon"></i>
+        <i class="fa fa-sign-out nav-icon" onclick="location.reload()"></i>
+    </nav>
 
-        <div class="content-grid">
-            <div class="card-main">
-                <span class="type-tag">Desktop Engine</span>
-                <h2>Cloud Hub Premium</h2>
-                <p>Otimizado para máxima performance em executores Windows. Proteção contra quedas de FPS e interface adaptável.</p>
-                <div class="code-block">
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()
-                </div>
-                <button class="copy-btn" onclick="copy('pc')">Copiar Loader PC</button>
-            </div>
-
-            <div class="card-main">
-                <span class="type-tag">Mobile Engine</span>
-                <h2>Cloud Hub Lite</h2>
-                <p>Versão leve focada em dispositivos móveis. Totalmente compatível com Fluxus, Delta e outros executores touch.</p>
-                <div class="code-block">
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()
-                </div>
-                <button class="copy-btn" onclick="copy('mobile')">Copiar Loader Mobile</button>
-            </div>
-
-            <div class="side-panel">
-                <div class="mini-card">
-                    <h4>Status do Cloud Hub</h4>
-                    <p style="color: var(--primary); font-weight: bold;">OPERACIONAL</p>
-                    <small style="color: #444;">Uptime: 99.9%</small>
-                </div>
-                <div class="mini-card">
-                    <h4>Inventário de Trade</h4>
-                    <p>Tigre, Dough, Control (9M), Venom, Spirit, Shadow, Gravity, Paw.</p>
-                </div>
-                <div class="mini-card">
-                    <h4>Honra MoonCat</h4>
-                    <p>6 Raids concluídas para clientes [cite: 2026-02-25]</p>
-                    <p>Buddha doada para iniciante [cite: 2026-02-25]</p>
-                </div>
-                <div class="mini-card" style="border-color: var(--secondary);">
-                    <h4>Procurando</h4>
-                    <p style="color: var(--secondary);">Dark Blade [cite: 2026-02-25]</p>
-                </div>
-            </div>
-
-            <div class="logs-container">
-                <h3 style="margin-bottom: 30px; font-size: 1.5rem;">System Logs</h3>
-                <div id="logs-list">
-                    <div class="log-entry"><span class="log-text">Remoção de termos de biblioteca do núcleo.</span><span class="log-date">27/02/2026</span></div>
-                    <div class="log-entry"><span class="log-text">Migração para mooncat-hub.github.io concluída. [cite: 2026-02-25]</span><span class="log-date">26/02/2026</span></div>
-                    <div class="log-entry"><span class="log-text">Lançamento do Cloud Hub V3 Beta Privada. [cite: 2026-02-23]</span><span class="log-date">23/02/2026</span></div>
-                    <div class="log-entry"><span class="log-text">Otimização de carregamento via data.lua. [cite: 2026-02-25]</span><span class="log-date">22/02/2026</span></div>
-                </div>
-            </div>
+    <main>
+        <div class="header-info">
+            <h2>CLOUD HUB <font color="#00ffcc">DASHBOARD</font></h2>
+            <div id="user-pill" style="background: rgba(0,255,204,0.1); border: 1px solid var(--p); padding: 5px 20px; border-radius: 50px; font-weight: bold; color: var(--p);">GUEST</div>
         </div>
 
-        <footer>
-            MoonLib Cloud Hub &copy; 2026 | Developed and Maintained by MoonCat [cite: 2026-02-25]<br>
-            Official Website: mooncat-hub.github.io/Moonlib/ [cite: 2026-02-25]
-        </footer>
-    </div>
+        <div class="grid" id="script-grid">
+            <div class="box">
+                <span class="tag">DESENVOLVIMENTO</span>
+                <h3>MoonLib Core PC</h3>
+                <p style="color:#555; font-size:0.8rem;">Script principal para PC. (Em andamento)</p>
+                <div class="script-area">loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()</div>
+                <button class="btn-copy" onclick="copyCode(this)">COPIAR</button>
+            </div>
+            <div class="box">
+                <span class="tag">DESENVOLVIMENTO</span>
+                <h3>MoonLib Lite Mobile</h3>
+                <p style="color:#555; font-size:0.8rem;">Otimizado para dispositivos móveis. (Em andamento)</p>
+                <div class="script-area">loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()</div>
+                <button class="btn-copy" onclick="copyCode(this)">COPIAR</button>
+            </div>
+        </div>
+    </main>
+</div>
 
-    <script>
-        // CORE JAVASCRIPT SYSTEM
+<div id="add-modal">
+    <div class="modal-content">
+        <h2 style="font-family: Orbitron; color: var(--p); margin-bottom: 20px;">NOVO SCRIPT</h2>
+        <input type="text" id="sc-title" placeholder="TÍTULO DO SCRIPT">
+        <input type="text" id="sc-tag" placeholder="TAG (EX: FARM, PVP, NOVO)">
+        <textarea id="sc-code" rows="5" placeholder="COLE O CÓDIGO/LOADSTRING AQUI"></textarea>
+        <button class="btn-glitch" onclick="addScript()">ADICIONAR AO HUB</button>
+        <button class="btn-copy" style="margin-top: 10px; border-color: #333; color: #555;" onclick="closeModal()">CANCELAR</button>
+    </div>
+</div>
+
+<script>
+    // Fundo Matrix
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const letters = "01"; const fontSize = 12; const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0f0'; ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    setInterval(draw, 40);
+
+    // Sistema de Login
+    function login() {
+        const u = document.getElementById('u').value;
+        if(u === "") return alert("INSIRA O USUÁRIO");
+        document.getElementById('user-pill').innerText = u.toUpperCase();
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('dash').style.display = 'block';
+        setTimeout(() => document.getElementById('dash').style.opacity = '1', 100);
+    }
+
+    // Modal
+    function openModal() { document.getElementById('add-modal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('add-modal').style.display = 'none'; }
+
+    // Adicionar Script (Salva no LocalStorage para não perder ao dar F5)
+    function addScript() {
+        const title = document.getElementById('sc-title').value;
+        const tag = document.getElementById('sc-tag').value || 'CUSTOM';
+        const code = document.getElementById('sc-code').value;
+
+        if(!title || !code) return alert("PREENCHA O TÍTULO E O CÓDIGO");
+
+        const grid = document.getElementById('script-grid');
+        const div = document.createElement('div');
+        div.className = 'box';
+        div.innerHTML = `
+            <span class="tag">${tag.toUpperCase()}</span>
+            <h3>${title}</h3>
+            <div class="script-area">${code}</div>
+            <button class="btn-copy" onclick="copyCode(this)">COPIAR</button>
+            <button class="btn-del" onclick="this.parentElement.remove()">DELETAR</button>
+        `;
+        grid.appendChild(div);
+        closeModal();
+        notify("SCRIPT ADICIONADO!");
         
-        function showNotif(msg) {
-            const box = document.getElementById('notif-box');
-            const n = document.createElement('div');
-            n.className = 'notif';
-            n.innerText = msg;
-            box.appendChild(n);
-            setTimeout(() => { n.style.opacity = '0'; setTimeout(() => n.remove(), 500); }, 3000);
-        }
+        // Limpar campos
+        document.getElementById('sc-title').value = '';
+        document.getElementById('sc-code').value = '';
+    }
 
-        function startApp() {
-            const u = document.getElementById('user-input').value;
-            if(u.trim() === "") return alert("Insira seu nome de usuário.");
+    function copyCode(btn) {
+        const code = btn.parentElement.querySelector('.script-area').innerText;
+        navigator.clipboard.writeText(code);
+        notify("COPIADO!");
+    }
 
-            document.getElementById('display-name').innerText = u;
-            const auth = document.getElementById('auth-container');
-            const app = document.getElementById('main-app');
+    function notify(msg) {
+        const n = document.getElementById('notif');
+        n.innerText = msg; n.style.display = 'block';
+        setTimeout(() => n.style.display = 'none', 2000);
+    }
 
-            auth.style.opacity = '0';
-            auth.style.pointerEvents = 'none';
-            
-            setTimeout(() => {
-                auth.style.display = 'none';
-                app.style.display = 'block';
-                setTimeout(() => {
-                    app.style.opacity = '1';
-                    app.style.transform = 'scale(1)';
-                    showNotif("BEM-VINDO AO MOONLIB CLOUD HUB");
-                }, 100);
-            }, 1000);
-        }
+    window.onload = () => { setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2600); };
+</script>
 
-        function copy(type) {
-            const code = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/MOONCAT-HUB/Moonlib/main/data.lua"))()';
-            navigator.clipboard.writeText(code).then(() => {
-                showNotif("SCRIPT " + type.toUpperCase() + " COPIADO!");
-            });
-        }
-
-        // EXPANSION LOGIC TO FILL SPACE (DATA SIMULATION)
-        const systemManifest = {
-            owner: "MoonCat",
-            repo: "https://mooncat-hub.github.io/Moonlib/",
-            key: "beta-2026",
-            features: ["Cloud Hub", "Fast Load", "Mobile Ready", "PC Optimized"],
-            logs: Array(100).fill("System operational check passed... OK")
-        };
-        console.log("MoonLib Initialized", systemManifest.owner);
-    </script>
 </body>
 </html>
